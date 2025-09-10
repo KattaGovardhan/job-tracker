@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -8,41 +8,43 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-      const response = await axios.post(`${baseUrl}/auth/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${baseUrl}/auth/login`,
+        { email, password },
+        { withCredentials: true } // ✅ important for cookies
+      );
+
       if (response.data.success) {
-        const token = response.data.token;
-
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-
-        navigate("/dashboard");
+        toast.success("Login successful!");
+        navigate("/job-tracker/dashboard");
       } else {
-        // Login failed
-        alert(response.data.message || "Login failed");
+        toast.error(response.data.message || "Login failed");
       }
     } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed");
       console.error("Login failed:", error.response?.data || error.message);
-      alert("Login failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,8 +97,12 @@ const Login = () => {
           </CardContent>
 
           <CardFooter className="flex flex-col items-center gap-4">
-            <Button type="submit" className="w-full cursor-pointer">
-              Login
+            <Button
+              type="submit"
+              className="w-full cursor-pointer"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
             </Button>
 
             <CardAction className="w-full flex justify-center">

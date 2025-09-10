@@ -26,10 +26,11 @@ export const register = async (req, res) => {
     });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
       to: email,
@@ -71,10 +72,11 @@ export const login = async (req, res) => {
     });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    
     return res.json({
       success: true,
       message: "User logged in successfully",
@@ -220,4 +222,27 @@ export const resetPassword = async (req, res) => {
   } catch (error) {
     return res.json({ success: false, message: error.message });
   }
+};
+
+export const changePassword = async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+        return res.json({ success: false, message: "Please fill all the fields" });
+    }
+    try {
+        const user = await userModel.findById(req.user.userId);
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.json({ success: false, message: "Invalid current password" });
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+        return res.json({ success: true, message: "Password changed successfully" });
+    } catch (error) {
+        return res.json({ success: false, message: error.message });
+    }
 };

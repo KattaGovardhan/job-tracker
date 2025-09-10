@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Button } from "../components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -8,11 +8,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -26,22 +27,39 @@ const Signup = () => {
     setLoading(true);
     try {
       const baseUrl = import.meta.env.VITE_API_BASE_URL;
-      const response = await axios.post(`${baseUrl}/auth/register`, {
-        name,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${baseUrl}/auth/register`,
+        {
+          name,
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
       if (response.data.success) {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        navigate("/dashboard");
-      } else {
-        alert(response.data.message || "Sign up failed");
+        toast.success("Sign up successful!");
+      
+        // Verify session before navigating
+        const checkAuth = await axios.get(
+          `${baseUrl}/auth/is-auth`,
+          { withCredentials: true }
+        );
+      
+        if (checkAuth.data.success) {
+          navigate("/login");
+        } else {
+          toast.error("Authentication failed, please login again");
+          navigate("/login");
+        }
+      } 
+      else {
+        toast.error(response.data.message || "Sign up failed");
       }
     } catch (error) {
+      toast.error(error.response?.data?.message || "Sign up failed");
       console.error("Sign up failed:", error.response?.data || error.message);
     }
+    setLoading(false);
   };
 
   return (
