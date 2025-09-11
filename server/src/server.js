@@ -1,48 +1,63 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
+
 import connectDB from "./config/connectDB.js";
 import authRouter from "./routes/authRoutes.js";
 import jobRouter from "./routes/jobRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
-import cookieParser from "cookie-parser";
 
 dotenv.config();
 
-//variables
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-//middleware
 app.use(express.json());
+
+// ✅ CORS must run before helmet
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL],
+    origin: process.env.CLIENT_URL, // single string is fine
     credentials: true,
   })
 );
+
 app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"], // allow Ant Design
-      scriptSrc: ["'self'"], // adjust as needed
-      connectSrc: ["'self'", "https://cdn.jsdelivr.net"],
-      imgSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        connectSrc: ["'self'", "https://cdn.jsdelivr.net"],
+        imgSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
+      },
     },
   })
 );
-app.use(cookieParser());
-await connectDB();
 
-//routes
+app.use(cookieParser());
+
+// routes
 app.use("/api/auth", authRouter);
 app.use("/api/jobs", jobRouter);
 app.use("/api/user", userRouter);
 app.use("/api/profile", profileRoutes);
 
-//server
-app.listen(PORT, () => {
-  console.log(`Server is running on port: ${PORT}`);
-});
+// start server after DB connects
+const start = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () =>
+      console.log(`✅ Server is running on port: ${PORT}`)
+    );
+  } catch (err) {
+    console.error("DB connection failed:", err);
+    process.exit(1);
+  }
+};
+
+start();
