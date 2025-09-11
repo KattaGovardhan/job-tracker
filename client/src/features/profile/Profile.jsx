@@ -21,7 +21,7 @@ const ProfilePage = () => {
 
   const fetchProfile = async () => {
     try {
-      const { data } = await axios.get("/api/profile", {
+      const { data } = await axios.get("/profile", {
         withCredentials: true,
       });
       if (data.success) {
@@ -45,7 +45,7 @@ const ProfilePage = () => {
 
   const saveProfile = async (updatedProfile) => {
     try {
-      const { data } = await axios.put("/api/profile/edit", updatedProfile, {
+      const { data } = await axios.put("/profile/edit", updatedProfile, {
         withCredentials: true,
       });
       if (data.success) {
