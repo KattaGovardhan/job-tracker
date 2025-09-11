@@ -19,7 +19,6 @@ const ProfilePage = () => {
   const [skillsInput, setSkillsInput] = useState("");
   const [isEditing, setIsEditing] = useState(false); // toggle edit mode
 
-  // ---------------- API ----------------
   const fetchProfile = async () => {
     try {
       const { data } = await axios.get("/api/profile", {
@@ -51,7 +50,7 @@ const ProfilePage = () => {
       });
       if (data.success) {
         toast.success("Profile updated successfully!");
-        fetchProfile(); // refresh the profile
+        fetchProfile(); 
       } else {
         toast.error("Update failed");
       }
@@ -59,7 +58,6 @@ const ProfilePage = () => {
       toast.error(error.message);
     }
   };
-  // ---------------- END API ----------------
 
   useEffect(() => {
     fetchProfile();
@@ -98,7 +96,7 @@ const ProfilePage = () => {
 
   const handleSave = () => {
     saveProfile(profile);
-    setIsEditing(false); // switch back to view mode
+    setIsEditing(false); 
   };
 
   return (

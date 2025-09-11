@@ -16,8 +16,13 @@ const app = express();
 
 //middleware
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
-app.use(cookieParser()); // Add this line to parse cookies
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
+app.use(cookieParser());
 await connectDB();
 
 //routes

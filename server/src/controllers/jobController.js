@@ -1,6 +1,5 @@
 import jobModel from "../models/jobSchema.js";
 
-// 👉 Get all jobs for a user
 export const getAllJobs = async (req, res) => {
   try {
     const { search, status, jobType, page = 1, limit = 10 } = req.query;
@@ -45,18 +44,6 @@ export const getAllJobs = async (req, res) => {
   }
 };
 
-// 👉 Get a single job by ID
-export const getJobById = async (req, res) => {
-  try {
-    const job = await jobModel.findById(req.params.id);
-    if (!job) return res.status(404).json({ error: "Job not found" });
-    res.status(200).json(job);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// 👉 Create a new job
 export const createJob = async (req, res) => {
   try {
     req.body.createdBy = req.user.userId;
@@ -69,7 +56,6 @@ export const createJob = async (req, res) => {
   }
 };
 
-// 👉 Update a job by ID
 export const updateJob = async (req, res) => {
   try {
     const job = await jobModel.findOneAndUpdate(
@@ -87,7 +73,6 @@ export const updateJob = async (req, res) => {
   }
 };
 
-// 👉 Delete a job by ID
 export const deleteJob = async (req, res) => {
   try {
     const job = await jobModel.findOneAndDelete({

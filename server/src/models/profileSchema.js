@@ -5,7 +5,7 @@ const profileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
     required: true,
-    unique: true, // one profile per user
+    unique: true,
   },
   bio: {
     type: String,
@@ -15,31 +15,9 @@ const profileSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  gender: {
-    type: String,
-    enum: ["male", "female", "other"],
-  },
-  dob: {
-    type: Date,
-  },
   skills: [
     {
       type: String,
-    },
-  ],
-  education: [
-    {
-      degree: String,
-      institution: String,
-      year: String,
-    },
-  ],
-  experience: [
-    {
-      role: String,
-      company: String,
-      from: Date,
-      to: Date,
     },
   ],
   socialLinks: {
