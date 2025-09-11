@@ -18,8 +18,19 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: [process.env.CLIENT_URL],
     credentials: true,
+  })
+);
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"], // allow Ant Design
+      scriptSrc: ["'self'"], // adjust as needed
+      connectSrc: ["'self'", "https://cdn.jsdelivr.net"],
+      imgSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
+    },
   })
 );
 app.use(cookieParser());
