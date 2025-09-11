@@ -31,7 +31,7 @@ const Login = () => {
       const response = await axios.post(
         `${baseUrl}/auth/login`,
         { email, password },
-        { withCredentials: true } // ✅ important for cookies
+        { withCredentials: true }
       );
 
       if (response.data.success) {
@@ -96,7 +96,7 @@ const Login = () => {
             </div>
           </CardContent>
 
-          <CardFooter className="flex flex-col items-center gap-4">
+          <CardFooter className="flex flex-col items-center gap-4 mt-8">
             <Button
               type="submit"
               className="w-full cursor-pointer"

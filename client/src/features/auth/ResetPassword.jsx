@@ -1,20 +1,46 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import toast from "react-hot-toast";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
 
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+  // === Send OTP handler ===
+  const handleSendOtp = async () => {
+    if (!email) {
+      toast.error("Please enter your email first");
+      return;
+    }
+    setSendingOtp(true);
+    try {
+      const res = await axios.post(`${baseUrl}/auth/send-reset-otp`, { email });
+      if (res.data.success) {
+        toast.success("OTP sent to your email");
+      } else {
+        toast.error(res.data.message || "Failed to send OTP");
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Error sending OTP");
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  // === Reset password handler ===
   const handleResetPassword = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmNewPassword) {
@@ -23,7 +49,6 @@ const ResetPassword = () => {
     }
     setLoading(true);
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL;
       const response = await axios.post(
         `${baseUrl}/auth/reset-password`,
         { email, otp, newPassword },
@@ -40,10 +65,7 @@ const ResetPassword = () => {
       toast.error(
         error.response?.data?.message || "Password reset failed. Please try again."
       );
-      console.error(
-        "Password reset failed:",
-        error.response?.data || error.message
-      );
+      console.error("Password reset failed:", error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
@@ -57,17 +79,29 @@ const ResetPassword = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleResetPassword} className="flex flex-col gap-6">
+            {/* Email + Send OTP */}
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="youremail@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+              <div className="flex gap-2">
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="youremail@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={sendingOtp}
+                >
+                  {sendingOtp ? "Sending..." : "Send OTP"}
+                </Button>
+              </div>
             </div>
+
+            {/* OTP */}
             <div className="grid gap-2">
               <Label htmlFor="otp">Enter OTP</Label>
               <Input
@@ -79,6 +113,8 @@ const ResetPassword = () => {
                 required
               />
             </div>
+
+            {/* New password */}
             <div className="grid gap-2">
               <Label htmlFor="newPassword">New Password</Label>
               <Input
@@ -89,6 +125,8 @@ const ResetPassword = () => {
                 required
               />
             </div>
+
+            {/* Confirm new password */}
             <div className="grid gap-2">
               <Label htmlFor="confirmNewPassword">Confirm New Password</Label>
               <Input
@@ -99,11 +137,9 @@ const ResetPassword = () => {
                 required
               />
             </div>
-            <Button
-              type="submit"
-              className="w-full cursor-pointer"
-              disabled={loading}
-            >
+
+            {/* Submit */}
+            <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
               {loading ? "Resetting..." : "Reset Password"}
             </Button>
           </form>

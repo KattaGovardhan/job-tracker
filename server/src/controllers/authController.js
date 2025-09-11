@@ -30,7 +30,7 @@ export const register = async (req, res) => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    
+
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
       to: email,
@@ -76,7 +76,7 @@ export const login = async (req, res) => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    
+
     return res.json({
       success: true,
       message: "User logged in successfully",
@@ -171,6 +171,7 @@ export const isAuthenticated = async (req, res) => {
 
 export const sendResetOTP = async (req, res) => {
   const { email } = req.body;
+
   if (!email) {
     return res.json({ success: false, message: "Please fill all the fields" });
   }
@@ -225,24 +226,27 @@ export const resetPassword = async (req, res) => {
 };
 
 export const changePassword = async (req, res) => {
-    const { currentPassword, newPassword } = req.body;
-    if (!currentPassword || !newPassword) {
-        return res.json({ success: false, message: "Please fill all the fields" });
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) {
+    return res.json({ success: false, message: "Please fill all the fields" });
+  }
+  try {
+    const user = await userModel.findById(req.user.userId);
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
     }
-    try {
-        const user = await userModel.findById(req.user.userId);
-        if (!user) {
-            return res.json({ success: false, message: "User not found" });
-        }
-        const isMatch = await bcrypt.compare(currentPassword, user.password);
-        if (!isMatch) {
-            return res.json({ success: false, message: "Invalid current password" });
-        }
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        user.password = hashedPassword;
-        await user.save();
-        return res.json({ success: true, message: "Password changed successfully" });
-    } catch (error) {
-        return res.json({ success: false, message: error.message });
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.json({ success: false, message: "Invalid current password" });
     }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+    return res.json({
+      success: true,
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
 };

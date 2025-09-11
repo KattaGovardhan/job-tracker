@@ -38,21 +38,19 @@ const Signup = () => {
       );
       if (response.data.success) {
         toast.success("Sign up successful!");
-      
+
         // Verify session before navigating
-        const checkAuth = await axios.get(
-          `${baseUrl}/auth/is-auth`,
-          { withCredentials: true }
-        );
-      
+        const checkAuth = await axios.get(`${baseUrl}/auth/is-auth`, {
+          withCredentials: true,
+        });
+
         if (checkAuth.data.success) {
-          navigate("/login");
+          navigate("/job-tracker/dashboard");
         } else {
           toast.error("Authentication failed, please login again");
           navigate("/login");
         }
-      } 
-      else {
+      } else {
         toast.error(response.data.message || "Sign up failed");
       }
     } catch (error) {

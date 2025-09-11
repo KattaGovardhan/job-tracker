@@ -11,6 +11,7 @@ import AllJobs from "@/features/jobs/AllJobs";
 import AddJob from "@/features/jobs/AddJob";
 import { Toaster } from "react-hot-toast";
 import Profile from "@/features/profile/Profile";
+import ResetPassword from "./features/auth/ResetPassword";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/reset-password" element={< ResetPassword/>} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
