@@ -21,7 +21,8 @@ const ProfilePage = () => {
 
   const fetchProfile = async () => {
     try {
-      const { data } = await axios.get("/profile", {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      const { data } = await axios.get(`${baseUrl}/profile`, {
         withCredentials: true,
       });
       if (data.success) {
@@ -45,7 +46,8 @@ const ProfilePage = () => {
 
   const saveProfile = async (updatedProfile) => {
     try {
-      const { data } = await axios.put("/profile/edit", updatedProfile, {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      const { data } = await axios.put(`${baseUrl}/profile/edit`, updatedProfile, {
         withCredentials: true,
       });
       if (data.success) {
