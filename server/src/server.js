@@ -17,10 +17,9 @@ const app = express();
 
 app.use(express.json());
 
-// ✅ CORS must run before helmet
 app.use(
   cors({
-    origin: process.env.CLIENT_URL, // single string is fine
+    origin: process.env.CLIENT_URL, 
     credentials: true,
   })
 );
@@ -52,7 +51,7 @@ const start = async () => {
   try {
     await connectDB();
     app.listen(PORT, () =>
-      console.log(`✅ Server is running on port: ${PORT}`)
+      console.log(`Server is running on port: ${PORT}`)
     );
   } catch (err) {
     console.error("DB connection failed:", err);
