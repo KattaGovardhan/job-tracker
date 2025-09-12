@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRightIcon, SparklesIcon } from "lucide-react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ImageWithFallback } from "./image/ImageWithFallback";
 
 export function CTA() {
   return (
