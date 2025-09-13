@@ -17,10 +17,20 @@ const app = express();
 
 app.use(express.json());
 
+const allowedOrigins = [process.env.CLIENT_URL, process.env.LOCAL_URL].filter(
+  Boolean
+);
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
-    origin: process.env.LOCAL_URL,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // allow curl / server requests
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
