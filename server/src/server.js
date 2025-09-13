@@ -19,7 +19,8 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL, 
+    origin: process.env.CLIENT_URL,
+    origin: process.env.LOCAL_URL,
     credentials: true,
   })
 );
@@ -50,9 +51,7 @@ app.use("/api/profile", profileRoutes);
 const start = async () => {
   try {
     await connectDB();
-    app.listen(PORT, () =>
-      console.log(`Server is running on port: ${PORT}`)
-    );
+    app.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
   } catch (err) {
     console.error("DB connection failed:", err);
     process.exit(1);
