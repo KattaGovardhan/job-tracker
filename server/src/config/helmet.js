@@ -1,4 +1,4 @@
-export const helmetOptions = {
+export const helmetOption = {
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
