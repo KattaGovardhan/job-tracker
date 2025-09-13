@@ -24,7 +24,7 @@ const allowedOrigins = [process.env.CLIENT_URL, process.env.LOCAL_URL].filter(
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // allow curl / server requests
+      if (!origin) return callback(null, true); 
 
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
