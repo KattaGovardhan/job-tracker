@@ -10,43 +10,14 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import {
-  Settings,
-  LogOut,
-  ChartColumnStacked,
-  DockIcon,
-  Plus,
-  User,
-} from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
-import toast from "react-hot-toast";
 
-const menuItems = [
-  {
-    title: "Dashboard",
-    url: "/job-tracker/dashboard",
-    icon: ChartColumnStacked,
-  },
-  { title: "All Jobs", url: "/job-tracker/jobs", icon: DockIcon },
-  { title: "Add Job", url: "/job-tracker/add-job", icon: Plus },
-  { title: "Profile", url: "/job-tracker/profile", icon: User },
-];
+import { menuItems } from "@/constants/constant";
+import { handleLogout } from "@/services/handleLogout";
 
 export default function AppSidebar() {
   const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL;
-      await axios.post(`${baseUrl}/auth/logout`, {}, { withCredentials: true });
-      toast.success("Logged out successfully");
-      navigate("/login");
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Logout failed");
-      console.error("Logout failed:", error);
-    }
-  };
 
   return (
     <Sidebar>
@@ -85,7 +56,7 @@ export default function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={handleLogout}>
+            <SidebarMenuButton onClick={() => handleLogout(navigate)}>
               <LogOut className="text-xl" />
               <span className="text-sm">Sign Out</span>
             </SidebarMenuButton>

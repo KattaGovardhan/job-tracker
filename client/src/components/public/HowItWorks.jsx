@@ -1,6 +1,6 @@
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { ImageWithFallback } from "./image/ImageWithFallback";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { ImageWithFallback } from "../image/ImageWithFallback";
 import {
   ArrowRightIcon,
   PlusIcon,

@@ -1,7 +1,7 @@
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 import { CheckIcon, ArrowRightIcon } from "lucide-react";
-import { ImageWithFallback } from "./image/ImageWithFallback";
+import { ImageWithFallback } from "../image/ImageWithFallback";
 
 export function Hero() {
   return (

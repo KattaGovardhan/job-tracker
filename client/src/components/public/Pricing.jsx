@@ -4,9 +4,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
+} from "../ui/card";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 import { CheckIcon } from "lucide-react";
 
 const features = [

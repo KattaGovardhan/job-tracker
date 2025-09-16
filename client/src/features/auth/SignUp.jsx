@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import toast from "react-hot-toast";
+import { handleSignUp } from "@/services/handleSignUp";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -21,44 +20,6 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const handleSignUp = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL;
-      const response = await axios.post(
-        `${baseUrl}/auth/register`,
-        {
-          name,
-          email,
-          password,
-        },
-        { withCredentials: true }
-      );
-      if (response.data.success) {
-        toast.success("Sign up successful!");
-
-        // Verify session before navigating
-        const checkAuth = await axios.get(`${baseUrl}/auth/is-auth`, {
-          withCredentials: true,
-        });
-
-        if (checkAuth.data.success) {
-          navigate("/job-tracker/dashboard");
-        } else {
-          toast.error("Authentication failed, please login again");
-          navigate("/login");
-        }
-      } else {
-        toast.error(response.data.message || "Sign up failed");
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Sign up failed");
-      console.error("Sign up failed:", error.response?.data || error.message);
-    }
-    setLoading(false);
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -71,7 +32,12 @@ const Signup = () => {
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSignUp} className="flex flex-col gap-6">
+          <form
+            onSubmit={(e) =>
+              handleSignUp(e, setLoading, name, email, password, navigate)
+            }
+            className="flex flex-col gap-6"
+          >
             <div className="grid gap-2">
               <Label htmlFor="name">Name</Label>
               <Input

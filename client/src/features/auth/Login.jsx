@@ -1,52 +1,24 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
+import { handleLogin } from "@/services/handleLogin";
 
-const Login = () => {
+export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
-      const response = await axios.post(
-        `${baseUrl}/auth/login`,
-        { email, password },
-        { withCredentials: true }
-      );
-
-      if (response.data.success) {
-        toast.success("Login successful!");
-        navigate("/job-tracker/dashboard");
-      } else {
-        toast.error(response.data.message || "Login failed");
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed");
-      console.error("Login failed:", error.response?.data || error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -58,7 +30,11 @@ const Login = () => {
           </CardDescription>
         </CardHeader>
 
-        <form onSubmit={handleLogin}>
+        <form
+          onSubmit={(e) =>
+            handleLogin(e, email, password, navigate, setLoading)
+          }
+        >
           <CardContent>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
@@ -72,6 +48,7 @@ const Login = () => {
                   required
                 />
               </div>
+
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
@@ -87,10 +64,10 @@ const Login = () => {
                 <Input
                   id="password"
                   type="password"
-                  required
                   placeholder="***********"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
             </div>
@@ -120,6 +97,4 @@ const Login = () => {
       </Card>
     </div>
   );
-};
-
-export default Login;
+}

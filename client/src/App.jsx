@@ -5,7 +5,7 @@ import Home from "@/pages/Home";
 import Login from "@/features/auth/Login";
 import SignUp from "@/features/auth/SignUp";
 
-import DashboardLayout from "@/components/layout/DashboardLayout";
+import DashboardLayout from "@/layout/DashboardLayout";
 import Dashboard from "@/features/jobs/Dashboard";
 import AllJobs from "@/features/jobs/AllJobs";
 import AddJob from "@/features/jobs/AddJob";
@@ -21,12 +21,12 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/reset-password" element={< ResetPassword/>} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/job-tracker" element={<DashboardLayout />}>
-            <Route index path="dashboard" element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="jobs" element={<AllJobs />} />
             <Route path="add-job" element={<AddJob />} />
             <Route path="profile" element={<Profile />} />

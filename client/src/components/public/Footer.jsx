@@ -1,5 +1,5 @@
-import { Separator } from "./ui/separator";
-import { Button } from "./ui/button";
+import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
 import { TwitterIcon, LinkedinIcon, GithubIcon } from "lucide-react";
 
 const footerLinks = {

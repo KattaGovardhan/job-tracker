@@ -1,4 +1,4 @@
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { MenuIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
