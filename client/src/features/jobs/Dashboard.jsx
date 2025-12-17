@@ -15,6 +15,7 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
+import { api } from "@/api/api";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -29,12 +30,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
         // 1. Fetch stats
-        const { data } = await axios.get(`${baseUrl}/user/stats-count`, {
-          withCredentials: true,
-        });
+        const { data } = await api.get("/user/stats-count");
 
         if (data.success) {
           setStats({
@@ -46,9 +44,7 @@ const Dashboard = () => {
         }
 
         // 2. Fetch user
-        const userRes = await axios.get(`${baseUrl}/profile`, {
-          withCredentials: true,
-        });
+        const userRes = await api.get("/profile");
         if (userRes.data.success) {
           setUser(userRes.data.profile.user);
         }

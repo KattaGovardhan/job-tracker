@@ -34,6 +34,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { api } from "@/api/api";
 
 const statusColors = {
   applied: "bg-blue-100 text-blue-800",
@@ -78,10 +79,8 @@ const AllJobs = () => {
     setLoading(true);
     setApiError("");
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL;
-      const response = await axios.get(`${baseUrl}/jobs`, {
+      const response = await api.get("/jobs", {
         params: { search: debouncedSearch, status, jobType, page, limit: 6 },
-        withCredentials: true,
       });
 
       const jobsArray = Array.isArray(response.data)

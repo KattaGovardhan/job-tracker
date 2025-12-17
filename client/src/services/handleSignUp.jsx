@@ -1,4 +1,4 @@
-import { url } from "@/api/api";
+import { api } from "@/api/api";
 import toast from "react-hot-toast";
 
 export const handleSignUp = async (
@@ -12,7 +12,7 @@ export const handleSignUp = async (
   e.preventDefault();
   setLoading(true);
   try {
-    const response = await url.post("/auth/register", {
+    const response = await api.post("/auth/register", {
       name,
       email,
       password,

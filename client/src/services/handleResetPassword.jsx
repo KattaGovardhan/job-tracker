@@ -1,4 +1,4 @@
-import { url } from "@/api/api";
+import { api } from "@/api/api";
 import toast from "react-hot-toast";
 
 export const handleSendOtp = async (email, setSendingOtp) => {
@@ -8,7 +8,7 @@ export const handleSendOtp = async (email, setSendingOtp) => {
   }
   setSendingOtp(true);
   try {
-    const res = await url.post("/auth/send-reset-otp", { email });
+    const res = await api.post("/auth/send-reset-otp", { email });
     if (res.data.success) {
       toast.success("OTP sent to your email");
     } else {

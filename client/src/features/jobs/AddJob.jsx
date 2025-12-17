@@ -1,6 +1,6 @@
 // pages/AddJob.jsx
 import React, { useState } from "react";
-import { url } from "@/api/api";
+import { api } from "@/api/api";
 import toast from "react-hot-toast";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import JobForm from "@/components/JobForm";
@@ -35,7 +35,7 @@ const AddJob = () => {
     setLoading(true);
 
     try {
-      await url.post("/jobs", formData);
+      await api.post("/jobs", formData);
 
       toast.success(`Job "${formData.role}" at ${formData.company} added!`);
       setFormData({

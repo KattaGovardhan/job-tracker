@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
-import axios from "axios";
+import { api } from "@/api/api";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
@@ -21,8 +21,7 @@ const ProfilePage = () => {
 
   const fetchProfile = async () => {
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL;
-      const { data } = await axios.get(`${baseUrl}/profile`, {
+      const { data } = await api.get("/profile", {
         withCredentials: true,
       });
       if (data.success) {
@@ -46,13 +45,10 @@ const ProfilePage = () => {
 
   const saveProfile = async (updatedProfile) => {
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL;
-      const { data } = await axios.put(`${baseUrl}/profile/edit`, updatedProfile, {
-        withCredentials: true,
-      });
+      const { data } = await api.put("/profile/edit", updatedProfile, {});
       if (data.success) {
         toast.success("Profile updated successfully!");
-        fetchProfile(); 
+        fetchProfile();
       } else {
         toast.error("Update failed");
       }
@@ -98,7 +94,7 @@ const ProfilePage = () => {
 
   const handleSave = () => {
     saveProfile(profile);
-    setIsEditing(false); 
+    setIsEditing(false);
   };
 
   return (

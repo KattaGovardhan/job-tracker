@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import axios from "axios";
+import { api } from "@/api/api";
 
 const ProtectedRoute = () => {
   const [auth, setAuth] = useState(null); // null = loading
@@ -8,10 +9,7 @@ const ProtectedRoute = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL;
-        const res = await axios.get(`${baseUrl}/auth/is-auth`, {
-          withCredentials: true,
-        });
+        const res = await api.get("/auth/is-auth");
         setAuth(res.data.success);
       } catch {
         setAuth(false);
@@ -22,7 +20,11 @@ const ProtectedRoute = () => {
   }, []);
 
   if (auth === null) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>; // show spinner while checking
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    ); // show spinner while checking
   }
 
   return auth ? <Outlet /> : <Navigate to="/login" />;
