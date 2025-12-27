@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
   Card,
   CardContent,
@@ -115,10 +114,7 @@ const AllJobs = () => {
     };
 
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL;
-      await axios.put(`${baseUrl}/jobs/${editingJob._id}`, updatedJob, {
-        withCredentials: true,
-      });
+      await api.put(`/jobs/${editingJob._id}`, updatedJob);
       setIsEditOpen(false);
       setEditingJob(null);
       fetchJobs();
@@ -140,10 +136,7 @@ const AllJobs = () => {
     if (!jobToDelete) return;
 
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL;
-      await axios.delete(`${baseUrl}/jobs/${jobToDelete}`, {
-        withCredentials: true,
-      });
+      await api.delete(`/jobs/${jobToDelete}`, {});
       setJobs((prev) => prev.filter((job) => job._id !== jobToDelete));
       setJobToDelete(null);
     } catch (err) {
